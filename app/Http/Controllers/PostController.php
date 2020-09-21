@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Session;
+
 use App\Category;
 use App\Post;
 use App\Tag;
@@ -59,6 +60,8 @@ class PostController extends Controller
             
             'published_at' => Carbon::now(),
         ]);
+
+        $post->tags()->attach($request->tags);
 
         
 
@@ -122,7 +125,7 @@ class PostController extends Controller
         $post->description = $request->description;
         $post->category_id = $request->category;
 
-        
+        $post->tags()->sync($request->tags);
 
         if($request->hasFile('image')){
             $image = $request->image;

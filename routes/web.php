@@ -13,18 +13,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'HomeController@index');
-Route::get('/about', 'HomeController@about');
-Route::get('/post', 'HomeController@post');
-Route::get('/contact', 'HomeController@contact');
-Route::get('/category', 'HomeController@category');
+Route::get('/', 'HomeController@index')->name('website.home');
+Route::get('/about', 'HomeController@about')->name('website.about');
+Route::get('/post/{slug}', 'HomeController@post')->name('website.post');
+Route::get('/contact', 'HomeController@contact')->name('website.contact');
+Route::get('/category/{slug}', 'HomeController@category')->name('website.category');
+Route::post('/send', 'HomeController@send_message')->name('website.send');
+Route::get('/tag/{slug}', 'HomeController@tag')->name('website.tag');
 
-Route::get('/dash', 'HomeController@admin');
+Route::get('/dashboard', 'DashboardController@admin')->name('dashboard');
 
 
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['prefix' => 'admin'], function () {
 
-Route::resource('/admin/category','CategoryController');
-Route::resource('/admin/tag','TagController');
-Route::resource('/admin/post','PostController');
+Route::resource('/category','CategoryController');
+Route::resource('/tag','TagController');
+Route::resource('/post','PostController');
+
+
+// setting
+Route::get('setting', 'SettingController@edit')->name('setting.index');
+Route::post('setting', 'SettingController@update')->name('setting.update');
+
+
+});
